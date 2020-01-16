@@ -9,7 +9,6 @@ Using a wide dataset of SNPs markers may help us to better delineate the stock s
 Go into the folder where your bed file is. Add the path of this file in your terminal by typing:
 ```{r, engine = 'bash', eval = FALSE}
 for K in 1 2 3 4 5; do admixture --cv=10 -B2000 -j8 nameofyourfile.bed $K | tee log${K}.out; done
-done
 ```
 
 ### Collect the cross validation information obtained from the log files
@@ -18,24 +17,26 @@ grep -h CV log*.out>cross_validation.txt
 done
 ```
 
-### Take the right order for individual id using the tfam file
+### Take the right order for individual id using the tfam file information
 ```{r, engine = 'bash', eval = FALSE}
 cut -f 1 nameofyourfile.tfam > id_admixture.txt
 done
 ```
 
 ### Swith to R to analyze the ADMIXTURE results 
-First, remove last features and download librairies:
+#### Remove last features
 ```{r}
 rm(list=ls())
 library(stringr)
 library(ggplot2)
 library(dplyr)
 ```
-Download the **cross-validation** results you have previously created via bash command.
+#### Download the **cross-validation** results you have previously created via bash command.
 ```{r}
 cv <- read.table("cross_validation.txt")
 ```
+
+#### Analyze the **cross-validation** results
 Then, add a K-cluster column indicating the number of K you test and select only two columns of interest, CV and K.
 ```{r}
 cv$K <- c(1,2,3,4,5)  
