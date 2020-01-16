@@ -46,6 +46,13 @@ Rename your two columns CV and K-cluster
 ```{r}
 colnames(CV) <- c("CV","K")
 ```
+
+create a summary of your **cross-validation** results
+```{r}
+colnames(CV) <- c("CV","K")
+```
+
+### Visualising the results
 Do a graph showing the cross validation results (the optimal number of clusters has the lowest cross validation error)
 ```{r}
 graph_title="Cross-Validation plot"
@@ -68,7 +75,7 @@ Save the graph
 ggsave("Admixture_cross-validation.pdf",width=7,height=5,dpi=600)
 dev.off()
 ```
-![Admixture cross-validation results.](Admixture.png)
+![Admixture cross-validation results.](Admixture_cross-validation.pdf)
 
 
 
