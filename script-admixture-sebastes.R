@@ -10,10 +10,10 @@ library(ggplot2)
 library(dplyr)
 
 ### Download the cross-validation
-cv <- read.table("cross_validation.txt")
+cv <- read.table("cross_validation.txt", header=TRUE)
 
 ### Add one K-cluster column
-cv$K <- c(1,10,11,12,13,14,2,3,4,5,6,7,8,9)  
+cv$K <- seq(1,29,1)
 
 ### Select only two columns
 CV <- select(cv, V4,K)
