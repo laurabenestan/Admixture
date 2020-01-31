@@ -174,7 +174,7 @@ admixture %>%
   slice(which.max(cnt)) 
 ```
 
-### Cretae a pop map regarding thh cluster found
+### Create a pop map regarding thh cluster found
 ```{r}
 admixture_subset$CLUSTER <- colnames(admixture_subset)[apply(admixture_subset,1,which.max)]
 admixture_results <- select(admixture_subset, IND, CLUSTER)
@@ -246,7 +246,7 @@ attributes(slist)
 head(attributes(slist[[1]]))
 ```
 
-# Read labels for STRUCTURE runs
+### Read labels for STRUCTURE runs
 ```{r}
 labset <- read.table("860ind_pop.txt",header=TRUE,stringsAsFactors=F)
 ```
