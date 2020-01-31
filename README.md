@@ -75,7 +75,7 @@ Save the graph
 ggsave("Admixture_cross-validation.pdf",width=7,height=5,dpi=600)
 dev.off()
 ```
-![Admixture cross-validation results.](Admixture_cross-validation.pdf)
+![Admixture cross-validation results.](Cross-validation.png)
 
 
 
