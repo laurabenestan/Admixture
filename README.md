@@ -10,19 +10,43 @@ To better understand this program, read the manual page [Alexander 2011] (https:
 
 ## 1. Run the ADMIXTURE program
 
-### Run Admixture in bash
+** Prepare a .bed file** from your vcf file.
+To do so, first use [VCFTOOLS](http://vcftools.sourceforge.net) in the terminal.
+```{r, engine = 'bash', eval = FALSE}
+vcftools --vcf nameofyourfile.vcf --plink-tped --out nameofyourfile
+```
+
+Then, use and [PLINK](http://zzz.bwh.harvard.edu/plink/).
+```{r, engine = 'bash', eval = FALSE}
+plink --tped nameofyourfile.tped --tfam nameofyourfile.tfam --make-bed --out nameofyourfile
+```
+
+The commend `--make-bed` will produce three files:
+- a binary ped file (*.bed)
+- the pedigree/phenotype information file (*.fam)
+- an extended MAP file (*.bim) that contains information about the allele names, which would otherwise be lost in the .bed file
+
+you can make . This will  and . 
+**Run Admixture** in bash.
 Go into the folder where your bed file is. Add the path of this file in your terminal by typing:
+
 ```{r, engine = 'bash', eval = FALSE}
 for K in 1 2 3 4 5; do admixture --cv=10 -B2000 -j8 nameofyourfile.bed $K | tee log${K}.out; done
 ```
 
-### Collect the cross validation information obtained from the log files
+**Collect the cross validation information** obtained from the all the log files.
 ```{r, engine = 'bash', eval = FALSE}
 grep -h CV log*.out>cross_validation.txt
 done
 ```
 
-### Take the right order for individual id using the tfam file information
+Extract the **right order for individual id** from your vcf file, using the tfam file information.
+To do so, you need to use [VCFTOOLS](http://vcftools.sourceforge.net)  with the following command:
+```{r, engine = 'bash', eval = FALSE}
+cut -f 1 nameofyourfile.tfam > id_admixture.txt
+done
+```
+
 ```{r, engine = 'bash', eval = FALSE}
 cut -f 1 nameofyourfile.tfam > id_admixture.txt
 done
@@ -293,4 +317,4 @@ plotQ(slist1,  clustercol= col2,
       showlegend=T, legendpos="right", legendkeysize = 6, legendtextsize = 6)
 ```
 
-![Admixture_results_K2.](24603snps_860ind.2.Q.pdf)
+![Admixture_results_K2.](Admixture_K2.png)
