@@ -26,7 +26,6 @@ The commend `--make-bed` will produce three files:
 - the pedigree/phenotype information file (*.fam)
 - an extended MAP file (*.bim) that contains information about the allele names, which would otherwise be lost in the .bed file
 
-you can make . This will  and . 
 **Run Admixture** in bash.
 Go into the folder where your bed file is. Add the path of this file in your terminal by typing:
 
