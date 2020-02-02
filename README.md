@@ -1,9 +1,14 @@
-Fishery genomics of Sebastes: investigating population structure using ADMIXTURE
+# Fishery genomics of Sebastes: investigating population structure using ADMIXTURE
 --------
 
-Using ADMIXTURE, a program customed for SNP datasets only, we aimed to define the genetic units present in two fish species: *Sebastes faciatus* and *S. mentella*. ADMIXTURE estimates individual ancestries by efficiently computing maximum likelihood estimates in a parametric model. To better understand this program, read the manual page [Alexander 2011](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3146885/).
-Those two species are curently fished in some regions of the Atlantic Canada while in othe regions the stocks are endangered. 
-Using a wide dataset of SNPs markers may help us to better delineate the stock structure than with the use of microsatellites.
+Using [ADMIXTURE] (http://software.genetics.ucla.edu/admixture/), a program customed for SNP datasets only, we aimed to define the genetic units present in two fish species: *Sebastes faciatus* and *S. mentella*. 
+
+ADMIXTURE estimates individual ancestries by efficiently computing maximum likelihood estimates in a parametric model. 
+To better understand this program, read the manual page [Alexander 2011] (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3146885/).
+
+*Sebastes faciatus* and *S. mentella* are curently fished in some regions of the Atlantic Canada while in othe regions the stocks are endangered. Using a wide dataset of SNPs markers may help us to better delineate the stock structure than with the use of microsatellites.
+
+## 1. Run the ADMIXTURE program
 
 ### Run Admixture in bash
 Go into the folder where your bed file is. Add the path of this file in your terminal by typing:
@@ -23,7 +28,13 @@ cut -f 1 nameofyourfile.tfam > id_admixture.txt
 done
 ```
 
-# 1. Select the optimal nuber of clusters
+## 2. Find the optimal number of clusters
+
+ Using the R environment, first check the percent of error due to the number of genetic cluster inferred. 
+Several methods used for defining the optimal number of clusters. Keep in mind not over interpreting the number o clusters defined by this analysis and to complement ADMIXTURE approch with a `Principal Component Analysis`or a `Discriminant Principal Component Analysis`. 
+Indeed [ADMIXTURE] (http://software.genetics.ucla.edu/admixture/),which is similar to [STRUCTURE](https://web.stanford.edu/group/pritchardlab/structure.html), is based on model assumptions that do not always follow the biological reality of your dataset. See [Lawson et al] (https://www.nature.com/articles/s41467-018-05257-7) for careful advices on how to interpret ADMIXTURE results.
+
+ 
 #### Remove last features
 ```{r}
 rm(list=ls())
@@ -53,7 +64,11 @@ colnames(CV) <- c("CV","K")
 ```
 
 ### Visualising the results
-Do a graph showing the cross validation results (the optimal number of clusters has the lowest cross validation error)
+Do a graph showing the cross validation results.
+Then select the optimal number of clusters regarding :
+- the lowest cross validation error
+- when the cross-validation error decrease the most
+
 ```{r}
 graph_title="Cross-Validation plot"
 x_title="K"
@@ -78,7 +93,10 @@ dev.off()
 ![Admixture cross-validation results.](Cross-validation.png)
 
 
-# 2. Analyse Q estimates results
+# 3. Analyse Q estimates results
+
+In this section, the goal is to delineate how is distributed the percent of ancestry to each genetic cluster found, and this for each individual. Assignment of clusters can be sometimes trivial while any clear population structure patterns tend to emerge or even when the vas majority of the individuals tends to show less 50% of ancestry to one genetic cluster (suggesting admixed populations). 
+One common mistake is to have an unbalanced number of samples per population. This brings out a high number of indivdiuals that tend to belong to this large population instead of other populations, as this population has  
 
 ### Remove last features
 ```{r}
@@ -96,7 +114,7 @@ library(tidyverse)
 library(RColorBrewer)
 ```
 
-### Read file.Q with K values the most likely (the smallest CV value)
+### Read file.Q with the Q = the optimal K 
 ```{r}
 admixture <- read.table("24603snps_860ind.2.Q")
 ```
@@ -121,7 +139,7 @@ class(admixture_long$ANCESTRY)
 levels(admixture_long$ANCESTRY)
 ```
 
-### Subset only the individuals showng more than 50% of ancestry with one genetic cluster
+### Subset only the individuals showing more than 50% of ancestry with one genetic cluster
 ```{r}
 admixture_long_50 <- subset(admixture_long, subset=admixture_long$PERC>=0.50)
 
@@ -174,7 +192,7 @@ admixture %>%
   slice(which.max(cnt)) 
 ```
 
-### Create a pop map regarding thh cluster found
+### Create a pop map regarding the cluster found
 ```{r}
 admixture_subset$CLUSTER <- colnames(admixture_subset)[apply(admixture_subset,1,which.max)]
 admixture_results <- select(admixture_subset, IND, CLUSTER)
@@ -202,7 +220,7 @@ group_unknown$POP <- substr(group_unknown$IND,1,5)
 table(group_unknown$POP)
 ```
 
-############### ANALYSE RESULTS IN POP HELPER
+4. Produce nice graphs from ADMIXTURE results
 
 ### Install the dependency packages and library
 ```{r}
