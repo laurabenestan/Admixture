@@ -1,10 +1,10 @@
 # Fishery genomics of Sebastes: investigating population structure using ADMIXTURE
 --------
 
-Using [ADMIXTURE] (http://software.genetics.ucla.edu/admixture/), a program customed for SNP datasets only, we aimed to define the genetic units present in two fish species: *Sebastes faciatus* and *S. mentella*. 
+Using [ADMIXTURE](http://software.genetics.ucla.edu/admixture/), a program customed for SNP datasets only, we aimed to define the genetic units present in two fish species: *Sebastes faciatus* and *S. mentella*. 
 
 ADMIXTURE estimates individual ancestries by efficiently computing maximum likelihood estimates in a parametric model. 
-To better understand this program, read the manual page [Alexander 2011] (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3146885/).
+To better understand this program, read the manual page [Alexander 2011](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3146885/).
 
 *Sebastes faciatus* and *S. mentella* are curently fished in some regions of the Atlantic Canada while in othe regions the stocks are endangered. Using a wide dataset of SNPs markers may help us to better delineate the stock structure than with the use of microsatellites.
 
@@ -55,40 +55,41 @@ done
 ## 2. Find the optimal number of clusters
 
  Using the R environment, first check the percent of error due to the number of genetic cluster inferred. 
-Several methods used for defining the optimal number of clusters. Keep in mind not over interpreting the number o clusters defined by this analysis and to complement ADMIXTURE approch with a `Principal Component Analysis`or a `Discriminant Principal Component Analysis`. 
-Indeed [ADMIXTURE] (http://software.genetics.ucla.edu/admixture/),which is similar to [STRUCTURE](https://web.stanford.edu/group/pritchardlab/structure.html), is based on model assumptions that do not always follow the biological reality of your dataset. See [Lawson et al] (https://www.nature.com/articles/s41467-018-05257-7) for careful advices on how to interpret ADMIXTURE results.
+Several methods used for defining the optimal number of clusters. 
 
- 
-#### Remove last features
+Keep in mind not over interpreting the number o clusters defined by this analysis and to complement ADMIXTURE approch with a `Principal Component Analysis`or a `Discriminant Principal Component Analysis`. 
+Indeed [ADMIXTURE](http://software.genetics.ucla.edu/admixture/),which is similar to [STRUCTURE](https://web.stanford.edu/group/pritchardlab/structure.html), is based on model assumptions that do not always follow the biological reality of your dataset. 
+See [Lawson et al] (https://www.nature.com/articles/s41467-018-05257-7) for careful advices on how to interpret ADMIXTURE results.
+
+In R, **download libraries**:
 ```{r}
-rm(list=ls())
 library(stringr)
 library(ggplot2)
 library(dplyr)
 ```
-#### Download the **cross-validation** results you have previously created via bash command.
+Download the **cross-validation** results you have previously created via bash command.
 ```{r}
 cv <- read.table("cross_validation.txt")
 ```
 
-#### Analyze the **cross-validation** results
+Analyze the **cross-validation** results
 Then, add a K-cluster column indicating the number of K you test and select only two columns of interest, CV and K.
 ```{r}
 cv$K <- c(1,2,3,4,5)  
 CV <- select(cv, V4,K)
 ```
+
 Rename your two columns CV and K-cluster
 ```{r}
 colnames(CV) <- c("CV","K")
 ```
 
-create a summary of your **cross-validation** results
+Create a summary of your **cross-validation** results
 ```{r}
 colnames(CV) <- c("CV","K")
 ```
 
-### Visualising the results
-Do a graph showing the cross validation results.
+Do a **graph showing the cross validation results**.
 Then select the optimal number of clusters regarding :
 - the lowest cross validation error
 - when the cross-validation error decrease the most
@@ -116,19 +117,12 @@ dev.off()
 ```
 ![Admixture cross-validation results.](Cross-validation.png)
 
-
 # 3. Analyse Q estimates results
 
 In this section, the goal is to delineate how is distributed the percent of ancestry to each genetic cluster found, and this for each individual. Assignment of clusters can be sometimes trivial while any clear population structure patterns tend to emerge or even when the vas majority of the individuals tends to show less 50% of ancestry to one genetic cluster (suggesting admixed populations). 
 One common mistake is to have an unbalanced number of samples per population. This brings out a high number of indivdiuals that tend to belong to this large population instead of other populations, as this population has  
 
-### Remove last features
-```{r}
-rm(list=ls())
-ls()
-```
-
-### Download libraries
+First **download libraries**:
 ```{r}
 library(reshape2)
 library(plyr)
@@ -138,24 +132,24 @@ library(tidyverse)
 library(RColorBrewer)
 ```
 
-### Read file.Q with the Q = the optimal K 
+Read **file.Q with the Q = the optimal K** 
 ```{r}
 admixture <- read.table("24603snps_860ind.2.Q")
 ```
 
-### Add one column with the individuals names and the population they belong to
+Add one column with the individuals names and the population they belong to.
 ```{r}
 id <- read.table("444ind_admixture.txt",header=FALSE)
 admixture <- cbind(id,admixture)
 admixture$POP <- substr(admixture$V1, 1,5)
 ```
 
-### Rename columns
+Rename columns.
 ```{r}
 colnames(admixture) <- c("IND", "K1","K2","POP")
 ```
 
-### Gather the colum "K1" and "K2" into the column "ANCESTRY"
+Transform the admixture object into a long format.
 ```{r}
 admixture_long <- melt(admixture,id.vars=c("IND","POP"),variable.name="ANCESTRY",value.name="PERC")
 names(admixture_long)
@@ -163,11 +157,13 @@ class(admixture_long$ANCESTRY)
 levels(admixture_long$ANCESTRY)
 ```
 
-### Subset only the individuals showing more than 50% of ancestry with one genetic cluster
+Subset only the individuals showing more than 50% of ancestry with one genetic cluster
 ```{r}
 admixture_long_50 <- subset(admixture_long, subset=admixture_long$PERC>=0.50)
+```
 
-### Make a ggpot graph with ADMIXTURE results
+Make a **graph with ADMIXTURE results**.
+```{r}
 graph_title="Stacked barplot of Admixture analysis in species"
 x_title="Individuals"
 y_title="Ancestry"
@@ -185,29 +181,29 @@ scale_fill_manual(values=col5, name= "K", labels=c("I","II","III","IV","V" ))+
         axis.text.y=element_text(size=14,family="Helvetica",face="bold"))
 ```
 
-### Save the map
+Save the graph.
 ```{r}
 ggsave("Sebastes_cercles.pdf",width=15,height=10,dpi=600,units="cm",useDingbats=F)
 ```
 
-### Check percent of ancestry per sampling locations
+Check **the percent of ancestry per sampling locations(POP) and per individuals (IND)**.
 ```{r}
 aggregate(admixture[, 2:6], list(admixture$POP), mean)
 aggregate(admixture[, 2:6], list(admixture$IND), max)
 ```
 
-### Check the variation of % in coancestry for each genetic group
+Estimate at which each genetic group belong each indivdiual regarding its maximum % of ancestry.
 ```{r}
 admixture[, "max"] <- apply(admixture[, 2:6], 1, max)
 summary(admixture)
 ```
 
-### Check the indivdiuals that could not be clearly attributed to one genetic cluster
+Check the indivdiuals that could not be clearly attributed to one genetic cluster.
 ```{r}
 admixture_subset <- subset(admixture, subset=admixture$max >= 0.5)
 ```
 
-### Report how many individuals per cluster
+Report how many individuals per cluster.
 ```{r}
 admixture_cluster <- select(admixture, K1,K2,K3,K4,K5)
 admixture %>% 
@@ -216,27 +212,19 @@ admixture %>%
   slice(which.max(cnt)) 
 ```
 
-### Create a pop map regarding the cluster found
+Create a pop map regarding the cluster found.
 ```{r}
 admixture_subset$CLUSTER <- colnames(admixture_subset)[apply(admixture_subset,1,which.max)]
 admixture_results <- select(admixture_subset, IND, CLUSTER)
 ```
 
-### Save the files
+Save the files.
 ```{r}
-write.table(admixture_results, 'Admixture_results_fas_K4.txt',quote=FALSE, row.names=FALSE, sep="\t", dec=".")
+write.table(admixture_results, 'Admixture_results_K2.txt',quote=FALSE, row.names=FALSE, sep="\t", dec=".")
 table(admixture_subset$CLUSTER, admixture_subset$POP)
 ```
 
-### Subset individuals belonging to GSL
-```{r}
-admixture$GSL <- ifelse(admixture$K4==admixture$max, 'GSL','no GSL')
-gsl_subset <- subset(admixture, subset=admixture$GSL=='GSL')
-table(gsl_subset$POP)
-aggregate(gsl_subset[, 5], list(gsl_subset$POP), mean)
-```
-
-### Number of individuals bellow 80%
+Calculate the number of individuals with ancestry bellow 50%.
 ```{r}
 quantile(admixture$max)
 group_unknown <- subset(admixture, subset=admixture$max<0.5)
@@ -244,72 +232,67 @@ group_unknown$POP <- substr(group_unknown$IND,1,5)
 table(group_unknown$POP)
 ```
 
-## . Produce nice graphs from ADMIXTURE results
+## 4. Produce nice graphs from ADMIXTURE results
 
-### Install the dependency packages and library
+Install the dependency packages and libraries required.
 ```{r}
 install.packages(c("Cairo","devtools","ggplot2","gridExtra","gtable","tidyr"),dependencies=T)
 library(pophelper)
 ```
 
-### Check version
+Check `pophelper`version.
 ```{r}
 packageDescription("pophelper", fields="Version")
 ```
 
-### Install the current version of pophelper
+Install the current version of `pophelper`.
 ```{r}
 devtools::install_github('royfrancis/pophelper', force=TRUE)
 ```
 
-### Load population map
+Load population map.
 ```{r}
 popmap =  read.delim("444ind_admixture.txt",header=FALSE,stringsAsFactors=F)
 pop_order = sort(unique(popmap$V1))
 ```
 
-### Load admixture files
+Load admixture files.
 ```{r}
 sfiles <- list.files(pattern = "*.Q", full.names=T)
 ```
 
-### Basic usage
+**Import the .Q files**.
 ```{r}
 slist <- readQ(files=sfiles, filetype = "basic")
 ```
 
-### Qlist attributes
+Qlist attributes
 ```{r}
 attributes(slist)
 ```
 
-### Dataframe attributes
-```{r}
-head(attributes(slist[[1]]))
-```
-
-### Read labels for STRUCTURE runs
+Import labels for ADMIXTURE runs.
 ```{r}
 labset <- read.table("860ind_pop.txt",header=TRUE,stringsAsFactors=F)
 ```
 
-### Length of labels equal to number of individuals?
+**Verify that the length of labels is equal to number of individuals**.
 ```{r}
 nrow(labset)
 ```
 
-### Check if labels are a character data type
+Check if labels are a character data type.
 ```{r}
 sapply(labset, is.character)
 class(labset)
 ```
 
-### Give a palett color
+Give a palett color.
 ```{r}
 col2 <- c('blue',"red")
 ```
 
-### Create a qplot for K = 2 considering two species
+Create a qplot for K = 2 considering two species.
 ```{r}
 slist1 <- alignK(slist[1]) 
 plotQ(slist1,  clustercol= col2,
