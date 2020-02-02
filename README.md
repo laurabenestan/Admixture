@@ -220,7 +220,7 @@ group_unknown$POP <- substr(group_unknown$IND,1,5)
 table(group_unknown$POP)
 ```
 
-4. Produce nice graphs from ADMIXTURE results
+## . Produce nice graphs from ADMIXTURE results
 
 ### Install the dependency packages and library
 ```{r}
@@ -293,3 +293,4 @@ plotQ(slist1,  clustercol= col2,
       showlegend=T, legendpos="right", legendkeysize = 6, legendtextsize = 6)
 ```
 
+![Admixture_results_K2.](24603snps_860ind.2.Q.pdf)
