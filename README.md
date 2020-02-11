@@ -140,12 +140,11 @@ Add one column with the individuals names and the population they belong to.
 ```{r}
 id <- read.table("860ind_sebastes.txt",header=TRUE)
 admixture <- cbind(id,admixture)
-admixture$POP <- substr(admixture$V1, 1,5)
 ```
 
 Rename columns.
 ```{r}
-colnames(admixture) <- c("IND", "K1","K2","POP")
+colnames(admixture) <- c("IND","POP","K1","K2")
 ```
 
 Transform the admixture object into a long format.
