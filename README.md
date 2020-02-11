@@ -138,7 +138,7 @@ admixture <- read.table("24603snps_860ind.2.Q")
 
 Add one column with the individuals names and the population they belong to.
 ```{r}
-id <- read.table("444ind_admixture.txt",header=FALSE)
+id <- read.table("860ind_sebastes.txt",header=TRUE)
 admixture <- cbind(id,admixture)
 admixture$POP <- substr(admixture$V1, 1,5)
 ```
