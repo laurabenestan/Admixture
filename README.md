@@ -76,7 +76,7 @@ cv <- read.table("cross_validation.txt")
 Analyze the **cross-validation** results
 Then, add a K-cluster column indicating the number of K you test and select only two columns of interest, CV and K.
 ```{r}
-cv$K <- c(1,2,3,4,5)  
+cv$K <-gsub("[\\(\\)]", "", regmatches(cv$V3, gregexpr("\\(.*?\\)", cv$V3)))
 CV <- select(cv, V4,K)
 ```
 
