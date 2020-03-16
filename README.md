@@ -31,10 +31,9 @@ Go into the folder where your bed file is.
 Run admixture on your .bed file in your terminal by typing:
 
 ```{r, engine = 'bash', eval = FALSE}
-for K in 1 2 3 4 5; do admixture --cv=10 -B2000 -j8 nameofyourfile.bed $K | tee log${K}.out; done
+for K in seq 1 29 ; do admixture --cv=10 -B2000 -j8 nameofyourfile.bed $K | tee log${K}.out; done
 ```
-Usually the maximum number of K - to test as a first step - is selected based on the number of sampling locations that you have. 
-If you have 10 sampling locations (n = 10), you can first test a K max = n + 1 = 11.
+Usually the maximum number of K - to test as a first step - is selected based on the number of sampling locations that you have. Here we had 28 sampling locations (n = 28), so we first tested a K max = n + 1 = 29.
 
 **Collect the cross validation information** obtained from the all the log files.
 ```{r, engine = 'bash', eval = FALSE}
