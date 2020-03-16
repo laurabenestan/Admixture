@@ -27,11 +27,14 @@ The commend `--make-bed` will produce three files:
 - an extended MAP file (*.bim) that contains information about the allele names, which would otherwise be lost in the .bed file
 
 **Run Admixture** in bash.
-Go into the folder where your bed file is. Add the path of this file in your terminal by typing:
+Go into the folder where your bed file is. 
+Run admixture on your .bed file in your terminal by typing:
 
 ```{r, engine = 'bash', eval = FALSE}
 for K in 1 2 3 4 5; do admixture --cv=10 -B2000 -j8 nameofyourfile.bed $K | tee log${K}.out; done
 ```
+Usually the maximum number of K - to test as a first step - is selected based on the number of sampling locations that you have. 
+If you have 10 sampling locations (n = 10), you can first test a K max = n + 1 = 11.
 
 **Collect the cross validation information** obtained from the all the log files.
 ```{r, engine = 'bash', eval = FALSE}
@@ -53,7 +56,7 @@ done
 
 ## 2. Find the optimal number of clusters
 
- Using the R environment, first check the percent of error due to the number of genetic cluster inferred. 
+Using the R environment, first check the percent of error due to the number of genetic cluster inferred. 
 Several methods used for defining the optimal number of clusters. 
 
 Keep in mind not over interpreting the number o clusters defined by this analysis and to complement ADMIXTURE approch with a `Principal Component Analysis`or a `Discriminant Principal Component Analysis`. 
