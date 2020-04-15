@@ -162,6 +162,11 @@ Subset only the individuals showing more than 50% of ancestry with one genetic c
 admixture_long_50 <- subset(admixture_long, subset=admixture_long$PERC>=0.50)
 ```
 
+Give a palett color
+```{r}
+col2 <- c('blue',"red")
+```
+
 Make a **graph with ADMIXTURE results**.
 ```{r}
 graph_title="Stacked barplot of Admixture analysis in species"
@@ -169,7 +174,7 @@ x_title="Individuals"
 y_title="Ancestry"
 graph_1<-ggplot(admixture_long_50,aes(x=POP,y=PERC,fill=ANCESTRY))
 graph_1+geom_bar(stat="identity")+
-scale_fill_manual(values=col5, name= "K", labels=c("I","II","III","IV","V" ))+ 
+scale_fill_manual(values=col2, name= "K", labels=c("K1","K2"))+ 
   labs(y=y_title)+
   labs(x=x_title)+
   theme(panel.grid.major.x = element_blank(),
