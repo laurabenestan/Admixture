@@ -193,13 +193,13 @@ ggsave("Sebastes_cercles.pdf",width=15,height=10,dpi=600,units="cm",useDingbats=
 
 Check **the percent of ancestry per sampling locations(POP) and per individuals (IND)**.
 ```{r}
-aggregate(admixture[, 3:4], list(admixture$POP), mean)
-aggregate(admixture[, 3:4], list(admixture$IND), max)
+aggregate(admixture[, 2:6], list(admixture$POP), mean)
+aggregate(admixture[, 2:6], list(admixture$IND), max)
 ```
 
 Estimate at which each genetic group belong each indivdiual regarding its maximum % of ancestry.
 ```{r}
-admixture[, "max"] <- apply(admixture[, 3:4], 1, max)
+admixture[, "max"] <- apply(admixture[, 2:6], 1, max)
 summary(admixture)
 ```
 
