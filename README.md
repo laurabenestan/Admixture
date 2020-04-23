@@ -85,11 +85,6 @@ Rename your two columns CV and K-cluster
 colnames(CV) <- c("CV","K")
 ```
 
-Create a summary of your **cross-validation** results
-```{r}
-colnames(CV) <- c("CV","K")
-```
-
 Do a **graph showing the cross validation results**.
 Then select the optimal number of clusters regarding :
 - the lowest cross validation error
