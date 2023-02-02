@@ -31,7 +31,7 @@ Go into the folder where your bed file is.
 Run admixture on your .bed file in your terminal by typing:
 
 ```{r, engine = 'bash', eval = FALSE}
-for K in echo $(seq 29) ; do admixture --cv=10 -B2000 -j8 nameofyourfile.bed $K | tee log${K}.out
+for K in echo $(seq 29) ; do admixture --cv=10 -B2000 -j8 nameofyourfile.bed $K | tee log${K}.out; done
 ```
 Usually the maximum number of K - to test as a first step - is selected based on the number of sampling locations that you have. Here we had 28 sampling locations (n = 28), so we first tested a K max = n + 1 = 29.
 
