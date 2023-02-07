@@ -1,7 +1,7 @@
 # Fishery genomics of Sebastes: investigating population structure using ADMIXTURE
 --------
 
-Using ADMIXTURE, a program customed for SNP datasets only, we aimed to define the genetic units present in two fish species: *Sebastes faciatus* and *S. mentella*. 
+Using ADMIXTURE [https://dalexander.github.io/admixture/admixture-manual.pdf], a program customed for SNP datasets only, we aimed to define the genetic units present in two fish species: *Sebastes faciatus* and *S. mentella*. 
 
 ADMIXTURE estimates individual ancestries by efficiently computing maximum likelihood estimates in a parametric model. 
 To better understand this program, read the manual page [Alexander 2011](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3146885/).
